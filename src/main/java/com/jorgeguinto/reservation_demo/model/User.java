@@ -16,11 +16,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "\"user\"")
 @Getter
 @Setter
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
+    // == Fields ==
     @Id
     @Column(nullable = false, updatable = false)
     @SequenceGenerator(
@@ -38,6 +39,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String fullName;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column
     private String passwordHash;
 
@@ -52,6 +56,14 @@ public class User {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    // == Constructor ==
+    public User(String fullName, String username, String passwordHash) {
+        this.fullName = fullName;
+        this.username = username;
+        this.passwordHash = passwordHash;
+    }
+
+
     @PrePersist
     public void prePersist() {
         dateCreated = OffsetDateTime.now();
@@ -61,10 +73,5 @@ public class User {
     @PreUpdate
     public void preUpdate() {
         lastUpdated = OffsetDateTime.now();
-    }
-
-    public User(String fullName, String passwordHash) {
-        this.fullName = fullName;
-        this.passwordHash = passwordHash;
     }
 }

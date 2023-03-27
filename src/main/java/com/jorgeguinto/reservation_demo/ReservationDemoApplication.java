@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,7 +30,7 @@ public class ReservationDemoApplication {
     public CommandLineRunner loadData(UserRepository userRepository,
                                       ReservationRepository reservationRepository) {
         return (args) -> {
-            User user = userRepository.save(new User("Jorge Guinto", "ksdaf332__?"));
+            User user = userRepository.save(new User("Jorge Guinto", "jorgeguintop", bCryptPasswordEncoder().encode("12345")));
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
             LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -44,5 +45,10 @@ public class ReservationDemoApplication {
 
             reservationRepository.save(reservation);
         };
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
